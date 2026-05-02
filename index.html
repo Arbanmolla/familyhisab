@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FAMILY HISAB</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <section class="login-screen" id="loginScreen">
+      <form class="login-card" id="loginForm">
+        <p class="eyebrow">FAMILY HISAB</p>
+        <h1>লগইন করুন</h1>
+        <label>
+          User ID
+          <input type="text" id="loginUser" autocomplete="username" required />
+        </label>
+        <label>
+          Password
+          <input type="password" id="loginPass" autocomplete="current-password" required />
+        </label>
+        <button class="primary-btn login-btn" type="submit">Login</button>
+        <p class="login-error" id="loginError">User ID অথবা password ভুল।</p>
+      </form>
+    </section>
+
+    <main class="app-shell hidden" id="appShell">
+      <section class="topbar">
+        <div>
+          <p class="eyebrow">পরিবারের খরচের খাতা</p>
+          <h1>FAMILY HISAB</h1>
+        </div>
+        <div class="top-actions">
+          <div class="status-pill" id="currentUserName"></div>
+          <div class="status-pill" id="syncStatus">Connecting</div>
+          <button class="secondary-btn" type="button" id="logoutBtn">Logout</button>
+        </div>
+      </section>
+
+      <section class="summary-grid" aria-label="খরচের সারাংশ">
+        <article class="summary-card total">
+          <span>মোট খরচ</span>
+          <strong id="totalAmount">৳0</strong>
+        </article>
+        <article class="summary-card">
+          <span>এই মাস</span>
+          <strong id="monthAmount">৳0</strong>
+        </article>
+        <article class="summary-card">
+          <span>আজ</span>
+          <strong id="todayAmount">৳0</strong>
+        </article>
+        <article class="summary-card">
+          <span>মাসের বাজেট</span>
+          <strong id="budgetAmount">৳0</strong>
+        </article>
+      </section>
+
+      <section class="budget-alert hidden" id="budgetAlert"></section>
+
+      <section class="workspace">
+        <form class="panel entry-panel" id="expenseForm">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Entry</p>
+              <h2>নতুন খরচ</h2>
+            </div>
+            <span class="user-badge" id="entryUserName"></span>
+          </div>
+
+          <label>
+            তারিখ
+            <input type="date" id="dateInput" required />
+          </label>
+
+          <label>
+            খরচের ধরন
+            <select id="categoryInput" required>
+              <option value="বাজার">বাজার</option>
+              <option value="বাসা ভাড়া">বাসা ভাড়া</option>
+              <option value="কারেন্ট বিল">কারেন্ট বিল</option>
+              <option value="গ্যাস বিল">গ্যাস বিল</option>
+              <option value="ইন্টারনেট">ইন্টারনেট</option>
+              <option value="ঔষধ">ঔষধ</option>
+              <option value="অন্যান্য">অন্যান্য</option>
+            </select>
+          </label>
+
+          <label class="hidden" id="detailWrap">
+            <span id="detailLabel">কি বাজার</span>
+            <input type="text" id="detailInput" maxlength="80" placeholder="যেমন চাল, ডাল, মাছ" />
+          </label>
+
+          <label>
+            টাকা
+            <input type="number" id="amountInput" min="1" step="1" placeholder="যেমন 1500" required />
+          </label>
+
+          <button class="primary-btn" type="submit">খরচ যোগ করুন</button>
+        </form>
+
+        <section class="panel report-panel">
+          <div class="panel-heading">
+            <h2>রিপোর্ট</h2>
+            <button class="icon-btn" type="button" id="printPdfBtn" title="PDF বানান">PDF</button>
+          </div>
+
+          <form class="budget-form" id="budgetForm">
+            <label>
+              এই মাসের বাজেট
+              <input type="number" id="budgetInput" min="0" step="1" placeholder="যেমন 30000" />
+            </label>
+            <button class="secondary-btn" type="submit">বাজেট সেট</button>
+          </form>
+          <div class="budget-set-note hidden" id="budgetSetNote">
+            <span>এই মাসের বাজেট সেট করা আছে।</span>
+            <button class="secondary-btn" type="button" id="editBudgetBtn">Edit</button>
+          </div>
+
+          <div class="filters">
+            <label>
+              শুরু
+              <input type="date" id="fromInput" />
+            </label>
+            <label>
+              শেষ
+              <input type="date" id="toInput" />
+            </label>
+            <label>
+              ইউজার
+              <select id="userFilter">
+                <option value="all">সবাই</option>
+                <option value="arban">Arban Molla</option>
+                <option value="bakkar">Abu Bakkar</option>
+              </select>
+            </label>
+            <label>
+              ধরন
+              <select id="categoryFilter">
+                <option value="all">সব</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="report-total">
+            <span>নির্বাচিত হিসাব</span>
+            <strong id="filteredTotal">৳0</strong>
+          </div>
+          <div class="breakdown" id="breakdown"></div>
+        </section>
+      </section>
+
+      <section class="panel chart-panel">
+        <div class="panel-heading">
+          <h2>গ্রাফ overview</h2>
+          <span class="status-pill">খরচ + বাজেট</span>
+        </div>
+        <div class="chart-grid">
+          <div>
+            <h3>ধরন অনুযায়ী খরচ</h3>
+            <canvas id="categoryChart" height="220"></canvas>
+          </div>
+          <div>
+            <h3>মাসের বাজেট vs খরচ</h3>
+            <canvas id="budgetChart" height="220"></canvas>
+          </div>
+        </div>
+        <div class="budget-history" id="budgetHistory"></div>
+      </section>
+
+      <section class="panel table-panel">
+        <div class="panel-heading">
+          <h2>সকল খরচ</h2>
+          <button class="secondary-btn" type="button" id="clearFilterBtn">সব দেখুন</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>তারিখ</th>
+                <th>কে</th>
+                <th>ধরন</th>
+                <th>বিস্তারিত</th>
+                <th>টাকা</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="expenseRows"></tbody>
+          </table>
+        </div>
+        <div class="empty-state" id="emptyState">এখনো কোনো খরচ যোগ করা হয়নি।</div>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
